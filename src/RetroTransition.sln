@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroTransition.TvOSApp", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroTransition.Apple", "RetroTransition.Apple\RetroTransition.Apple.csproj", "{B9D8841D-6FFA-42E8-A528-6F02F53E8619}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroTransition.MacCatalystApp", "RetroTransition.MacCatalystApp\RetroTransition.MacCatalystApp.csproj", "{C77163D0-661D-461C-9748-9F366E188C3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{B9D8841D-6FFA-42E8-A528-6F02F53E8619}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9D8841D-6FFA-42E8-A528-6F02F53E8619}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9D8841D-6FFA-42E8-A528-6F02F53E8619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C77163D0-661D-461C-9748-9F366E188C3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C77163D0-661D-461C-9748-9F366E188C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C77163D0-661D-461C-9748-9F366E188C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C77163D0-661D-461C-9748-9F366E188C3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

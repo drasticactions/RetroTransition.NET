@@ -4,7 +4,7 @@
 
 using RetroTransition.Apple;
 
-namespace RetroTransition.IOSApp;
+namespace RetroTransition.MacCatalystApp;
 
 /// <summary>
 /// App Delegate.

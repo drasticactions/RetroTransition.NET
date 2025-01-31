@@ -1,4 +1,4 @@
-// <copyright file="ColorGridViewController.cs" company="Drastic Actions">
+// <copyright file="RandomColorGridViewController.cs" company="Drastic Actions">
 // Copyright (c) Drastic Actions. All rights reserved.
 // </copyright>
 
@@ -7,28 +7,41 @@ namespace RetroTransition.Apple;
 /// <summary>
 /// Color Grid View Controller.
 /// </summary>
-public sealed class ColorGridViewController : UIViewController
+public sealed class RandomColorGridViewController : UIViewController
 {
     private const string CellId = "ColorCell";
-    private UIPickerView? pickerView;
-    private TransitionPickerDataModel? pickerDataModel;
     private UICollectionView? collectionView;
     private List<UIColor>? colors;
-
-    /// <summary>
-    /// Gets the selected transition.
-    /// </summary>
-    public RetroTransition SelectedTransition => this.pickerDataModel!.SelectedTransition ?? new CircleRetroTransition();
+    private List<RetroTransition> transitions;
 
     /// <inheritdoc/>
     public override void ViewDidLoad()
     {
+        this.transitions =
+        [
+            new AngleLineRetroTransition(),
+            new CircleRetroTransition(),
+            new ClockRetroTransition(),
+            new CollidingDiamondsRetroTransition(),
+            new CrossFadeRetroTransition(),
+            new FlipRetroTransition(),
+            new ImageRepeatingRetroTransition(),
+            new MultiCircleRetroTransition(),
+            new MultiFlipRetroTransition(),
+            new RectanglerRetroTransition(),
+            new ReverseCircleRetroTransition(),
+            new ReverseStarRevealRetroTransition(),
+            new ShrinkingGrowingDiamondsRetroTransition(),
+            new SplitFromCenterRetroTransition(),
+            new StarRevealRetroTransition(),
+            new StraightLineRetroTransition(),
+            new SwingInRetroTransition(),
+            new TiledFlipRetroTransition(),
+        ];
         base.ViewDidLoad();
         this.Title = "Color Grid";
-        this.View!.BackgroundColor = UIColor.SystemBackground;
 
         this.InitializeColors();
-        this.SetupPickerView();
         this.SetupCollectionView();
     }
 
@@ -48,27 +61,7 @@ public sealed class ColorGridViewController : UIViewController
             UIColor.Magenta,
         };
     }
-
-    private void SetupPickerView()
-    {
-        this.pickerView = new UIPickerView
-        {
-            TranslatesAutoresizingMaskIntoConstraints = false,
-        };
-
-        this.View!.AddSubview(this.pickerView);
-
-        NSLayoutConstraint.ActivateConstraints(new[]
-        {
-            this.pickerView.TopAnchor.ConstraintEqualTo(this.View.SafeAreaLayoutGuide.TopAnchor),
-            this.pickerView.LeadingAnchor.ConstraintEqualTo(this.View.LeadingAnchor),
-            this.pickerView.TrailingAnchor.ConstraintEqualTo(this.View.TrailingAnchor),
-            this.pickerView.HeightAnchor.ConstraintEqualTo(150),
-        });
-
-        this.pickerView.Model = this.pickerDataModel = new TransitionPickerDataModel();
-    }
-
+    
     private void SetupCollectionView()
     {
         var layout = new UICollectionViewFlowLayout
@@ -91,68 +84,11 @@ public sealed class ColorGridViewController : UIViewController
 
         NSLayoutConstraint.ActivateConstraints(new[]
         {
-            this.collectionView.TopAnchor.ConstraintEqualTo(this.pickerView!.BottomAnchor),
+            this.collectionView.TopAnchor.ConstraintEqualTo(this.View!.TopAnchor),
             this.collectionView.LeadingAnchor.ConstraintEqualTo(this.View.LeadingAnchor),
             this.collectionView.TrailingAnchor.ConstraintEqualTo(this.View.TrailingAnchor),
             this.collectionView.BottomAnchor.ConstraintEqualTo(this.View.BottomAnchor),
         });
-    }
-
-    private class TransitionPickerDataModel : UIPickerViewModel
-    {
-        private List<RetroTransition> transitions;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TransitionPickerDataModel"/> class.
-        /// </summary>
-        public TransitionPickerDataModel()
-        {
-            this.transitions =
-            [
-                new AngleLineRetroTransition(),
-                new CircleRetroTransition(),
-                new ClockRetroTransition(),
-                new CollidingDiamondsRetroTransition(),
-                new CrossFadeRetroTransition(),
-                new FlipRetroTransition(),
-                new ImageRepeatingRetroTransition(),
-                new MultiCircleRetroTransition(),
-                new MultiFlipRetroTransition(),
-                new RectanglerRetroTransition(),
-                new ReverseCircleRetroTransition(),
-                new ReverseStarRevealRetroTransition(),
-                new ShrinkingGrowingDiamondsRetroTransition(),
-                new SplitFromCenterRetroTransition(),
-                new StarRevealRetroTransition(),
-                new StraightLineRetroTransition(),
-                new SwingInRetroTransition(),
-                new TiledFlipRetroTransition(),
-            ];
-
-            this.SelectedTransition = this.transitions[0];
-        }
-
-        public RetroTransition? SelectedTransition { get; private set; }
-
-        public override nint GetComponentCount(UIPickerView pickerView)
-        {
-            return 1;
-        }
-
-        public override nint GetRowsInComponent(UIPickerView pickerView, nint component)
-        {
-            return this.transitions.Count;
-        }
-
-        public override string GetTitle(UIPickerView pickerView, nint row, nint component)
-        {
-            return this.transitions[(int)row].GetType().Name;
-        }
-
-        public override void Selected(UIPickerView pickerView, nint row, nint component)
-        {
-           this.SelectedTransition = this.transitions[(int)row];
-        }
     }
 
     private class ColorDataSource : UICollectionViewDataSource
@@ -184,9 +120,9 @@ public sealed class ColorGridViewController : UIViewController
 
     private class ColorDelegate : UICollectionViewDelegate
     {
-        private ColorGridViewController parentViewController;
+        private RandomColorGridViewController parentViewController;
 
-        public ColorDelegate(ColorGridViewController parentViewController)
+        public ColorDelegate(RandomColorGridViewController parentViewController)
         {
             this.parentViewController = parentViewController;
         }
@@ -195,7 +131,9 @@ public sealed class ColorGridViewController : UIViewController
         {
             var cell = (ColorCell)collectionView.CellForItem(indexPath)!;
             var color = cell.ContentView.Subviews[0].BackgroundColor;
-            var transition = this.parentViewController.SelectedTransition;
+
+            // pick a transition at random
+            var transition = this.parentViewController.transitions[new Random().Next(this.parentViewController.transitions.Count)];
             var detailVC = new ColorDetailViewController(color!, transition);
             this.parentViewController.NavigationController!.PushViewController(detailVC, transition);
         }
