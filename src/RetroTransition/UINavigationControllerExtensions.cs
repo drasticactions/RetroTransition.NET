@@ -30,7 +30,7 @@ namespace RetroTransition
         /// <param name="navigationController">The UINavigationController.</param>
         /// <param name="transition">The Transition.</param>
         /// <returns>The popped view controller.</returns>
-        public static UIViewController PopViewControllerRetroTransition(
+        public static UIViewController PopViewController(
             this UINavigationController navigationController,
             RetroTransition transition)
         {
